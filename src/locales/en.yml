@@ -1,7 +1,6 @@
 name: Read Frog
 extName: "Read Frog - Translate & Learn"
 extDescription: Read Frog is an open source browser extension designed to help you learn languages deeply from any website.
-uninstallSurveyUrl: https://tally.so/r/nPK6Ob
 dataTypes:
   string: Text
   number: Number
@@ -30,21 +29,8 @@ popup:
   translateParagraph: to translate paragraph
   hub:
     tooltip: Translate text with multiple models simultaneously
-  discord:
-    tooltip: Join Discord to connect with developers and get early access to new features
-  blog:
-    notification: What's new in Read Frog
   aiSmartContext: AI Smart Context
   aiSmartContextDescription: Uses webpage context to improve translation quality. Requires LLM translation provider.
-  more:
-    title: More
-    translationHub: Translation Hub
-    joinDiscord: Join Discord
-    joinWechat: Join WeChat Group
-    starGithub: Star on Github
-    rateUs: Rate Us
-    ebook: Third-party E-book Reader
-    tutorial: Tutorial
 errorRecovery:
   title: Something went wrong
   description: Recovery mode is active. You can export your current settings as a backup, then reset settings and try again.
@@ -196,6 +182,20 @@ options:
       system: System
       light: Light
       dark: Dark
+    pluginLanguage:
+      title: Plugin Language
+      description: Choose the display language used by the extension UI.
+      languages:
+        auto: Auto
+        en: English
+        es: Español
+        ja: 日本語
+        ko: 한국어
+        ru: Русский
+        tr: Türkçe
+        vi: Tiếng Việt
+        zhCN: 简体中文
+        zhTW: 繁體中文
     featureProviders:
       title: Feature Providers
       description: Choose which provider to use for each feature
@@ -390,42 +390,6 @@ options:
             description: This output field will be removed.
             confirm: Delete
             cancel: Cancel
-          notebase:
-            title: Notebase Connection
-            description: Save this action's structured results to a remote notebase.
-            loginRequiredTitle: Log in to configure Notebase
-            loginRequiredDescription: Sign in on readfrog.app before choosing a notebase or editing mappings.
-            loginAction: Log in
-            tableLabel: Notebase
-            tablePlaceholder: Select a notebase
-            tableClearOption: Disconnect notebase
-            refreshAction: Refresh
-            emptyTitle: No notebases yet
-            emptyDescription: Create a notebase on readfrog.app, then come back here to map fields.
-            openNotebaseAction: Open Notebase
-            betaLockedTitle: This account is not in the Notebase beta
-            betaLockedDescription: You can keep this action configured, but choosing notebases and syncing results is limited to selected beta accounts for now.
-            tableUnavailableTitle: Selected notebase is no longer available
-            tableUnavailableDescription: Refresh or choose another notebase before saving again.
-            tableUnavailableOption: unavailable
-            schemaErrorTitle: Failed to load notebase schema
-            schemaErrorDescription: Try refreshing the schema again in a moment.
-            schemaLoading: Loading notebase schema...
-            mappingsLabel: Field Mappings
-            mappingsEmpty: No mappings yet. Add one when you are ready to save fields.
-            addMappingAction: Add Mapping
-            removeMappingAction: Remove mapping
-            localFieldLabel: Action field
-            localFieldPlaceholder: Select an action field
-            remoteFieldLabel: Notebase field
-            remoteFieldPlaceholder: Select a notebase field
-            columnUnavailableOption: removed
-            invalidMappingsTitle: Some mappings need attention
-            invalidMappingsDescription: Invalid mappings are preserved, but Save to Notebase stays disabled until you fix them.
-            mappingMissingLocal: The mapped action field no longer exists.
-            mappingMissingRemote: The mapped notebase field no longer exists.
-            mappingMissingSchema: Refresh the notebase schema to validate this mapping.
-            mappingIncompatible: The field types no longer match.
           tokens:
             selection: Selected text content
             paragraphs: Intersecting paragraph text joined with blank lines, truncated to the first 2000 characters when sent to custom AI actions
@@ -460,6 +424,11 @@ options:
               7. Difficulty must be a CEFR level (A1, A2, B1, B2, C1, or C2).
               8. If a field is unknown, return an empty string instead of guessing.
               9. Respond in {{targetLanguage}} for all textual fields unless source-form text is required for clarity.
+              10. If Selection contains misspellings, identify the likely intended form when context supports it; use the corrected form as Term and mention the correction in Definition.
+              11. If Selection uses nonstandard abbreviations, homophones, or spaced-out letters, expand them to the standard expression when context supports it (e.g., "A U ok" means "are you ok") and explain it in Definition.
+              12. Explain culturally specific usage, local slang, idioms, or regional connotations when they are relevant to the term.
+
+              13. For English beginners, prioritize part-of-speech usage, common word forms (plural, third-person singular, present participle, past tense, past participle), and useful collocations/phrases.
 
               ## Examples
 
@@ -470,9 +439,11 @@ options:
               - Term: blossom
               - Phonetic: /ˈblɒs.əm/
               - Part of Speech: noun
+              - Forms/Tenses: plural blossoms; verb forms: blossoms, blossoming, blossomed.
               - Paragraphs: The ephemeral beauty of cherry blossoms reminds us to cherish each moment.
               - Definition: 花；花朵（尤指果树的花）
               - Paragraphs Translation: 樱花短暂的美丽提醒我们珍惜每一刻。
+              - Common Phrases: cherry blossom; in blossom; come into blossom.
               - Difficulty: B2
 
               ### Example 2
@@ -482,9 +453,11 @@ options:
               - Term: 感動
               - Phonetic: kandou
               - Part of Speech: noun
+              - Forms/Tenses: noun / suru-verb stem; verb form 感動する.
               - Paragraphs: この映画はつまらないと思ったけど、最後は感動した。
               - Definition: Being deeply moved; emotional touch
               - Paragraphs Translation: I thought this movie was boring, but the ending was moving.
+              - Common Phrases: 感動する (to be moved); 感動的な場面 (a moving scene).
               - Difficulty: B1
             prompt: |-
               ## Input
@@ -497,14 +470,70 @@ options:
             fieldPhoneticDescription: Standard phonetic transcription for the term's language (e.g., IPA for English, pinyin for Mandarin, romaji for Japanese).
             fieldPartOfSpeech: Part of Speech
             fieldPartOfSpeechDescription: Grammatical category (e.g., noun, verb, adjective).
+            fieldForms: Forms/Tenses
+            fieldFormsDescription: Common word forms, especially English plural, third-person singular, present participle, past tense, and past participle; return an empty string when not applicable.
             fieldParagraphs: Paragraphs
             fieldParagraphsDescription: The paragraphs from the prompt above. Do not rewrite them.
             fieldDefinition: Definition
             fieldDefinitionDescription: One concise definition for the contextual sense.
             fieldParagraphsTranslation: Paragraphs Translation
             fieldParagraphsTranslationDescription: The translation of the paragraphs.
+            fieldCommonPhrases: Common Phrases
+            fieldCommonPhrasesDescription: 2 to 5 common collocations, phrases, idioms, or local expressions with short explanations.
             fieldDifficulty: Difficulty
             fieldDifficultyDescription: Estimated CEFR difficulty level A1, A2, B1, B2, C1, or C2.
+          englishLearningCoach:
+            name: English Learning Coach
+            description: Beginner-friendly English coaching for grammar, parts of speech, forms, collocations, roots, slang, and memory hooks
+            systemPrompt: |-
+              You are a patient, fun, beginner-friendly English learning coach.
+
+              ## Goal
+              Given an English word, phrase, abbreviation, slang expression, or sentence, produce a learning card that helps a beginner understand it, pronounce it, use it, and remember it.
+
+              ## Rules
+              1. Explain in {{targetLanguage}} by default, while keeping key English text unchanged.
+              2. Identify whether Selection is a word, phrase, abbreviation, slang expression, or full sentence.
+              3. If Selection has spelling mistakes or nonstandard wording, provide the natural corrected form when context supports it.
+              4. Explain grammar like teaching a total beginner; avoid jargon, or explain jargon immediately.
+              5. For verbs, include base form, third-person singular, present participle, past tense, past participle, and common tense usage.
+              6. For nouns, include singular/plural forms; for adjectives/adverbs, include comparative/superlative forms; say “not applicable” when irrelevant.
+              7. Include high-frequency collocations, phrases, fixed expressions, and everyday usage.
+              8. Explain roots, prefixes, suffixes, word formation, or word family links when useful for memory.
+              9. Explain cultural context, history, local slang, humor, memes, jokes, or common misunderstandings when relevant.
+              10. Keep the output concise, scannable, and beginner-friendly.
+              11. Practice sentences should be easy to read aloud and close to daily life.
+              12. If something is uncertain, say it is possible instead of inventing facts.
+
+              ## Style
+              - Sound like a supportive teacher sitting next to the learner.
+              - Emphasize where the expression comes from, why it is used this way, and what learners often misunderstand.
+              - Put the most useful beginner information first.
+            prompt: |-
+              ## Input
+              Selection: {{selection}}
+              Context paragraphs: {{paragraphs}}
+              Target language: {{targetLanguage}}
+            fieldExpression: Expression / Correction
+            fieldExpressionDescription: The selected English text; include the natural corrected form if there is a spelling or abbreviation issue.
+            fieldPronunciation: Pronunciation
+            fieldPronunciationDescription: IPA, phonics hints, stress, linking, or weak-form notes.
+            fieldMeaning: Core Meaning
+            fieldMeaningDescription: The contextual meaning, including literal vs natural translation when useful.
+            fieldGrammar: Grammar Breakdown
+            fieldGrammarDescription: Sentence structure, tense, voice, prepositions, articles, clauses, or other beginner grammar points.
+            fieldForms: Part of Speech / Forms / Tenses
+            fieldFormsDescription: Part of speech plus verb forms, noun plural, adjective/adverb comparative and superlative forms, when applicable.
+            fieldPhrases: Common Collocations
+            fieldPhrasesDescription: High-frequency phrases, fixed expressions, everyday spoken usage, and simple examples.
+            fieldRoots: Roots & Affixes
+            fieldRootsDescription: Roots, prefixes, suffixes, word formation, origin clues, or word family links that help memory.
+            fieldCulture: Culture / Slang / Fun Facts
+            fieldCultureDescription: Local usage, slang meanings, history, jokes, memes, or interesting background.
+            fieldMemory: Memory Hooks
+            fieldMemoryDescription: Beginner-friendly mnemonics, pitfalls, and easily confused points.
+            fieldPractice: Read-Aloud Practice
+            fieldPracticeDescription: 2 to 4 simple English practice sentences with translations.
           improveWriting:
             name: Improve Writing
             description: Analyze writing errors and suggest improvements
@@ -763,9 +792,6 @@ options:
       title: About
       description: Read Frog was born in April 2025
       mission: Read Frog aims to expand equal access to high-quality education in the AI era by making learning experiences that feel closer to a real teacher affordable across language learning, medicine, and other knowledge-heavy fields.
-      analytics:
-        title: Help improve user experience
-        tooltip: When enabled, Read Frog sends anonymous product usage signals so we can verify feature reliability, improve performance and UX polish, and prioritize future work.
     sync:
       title: Manual Config Sync
       description: Manually import and export your configuration settings
@@ -941,10 +967,6 @@ options:
           targetLanguage: Target language
           videoTitle: Video title
           videoSummary: Video summary (requires AI Smart Context)
-  whatsNew:
-    title: What's New
-  survey:
-    title: Improve Subtitle 🎁
   rateUs:
     title: Rate Us
 side:
@@ -992,15 +1014,6 @@ action:
   copied: Copied
   regenerate: Regenerate
   viewContextDetails: Context
-  saveToNotebase: Save to Notebase
-  saveToNotebaseSaving: Saving...
-  saveToNotebaseSuccess: Saved to Notebase
-  saveToNotebaseFailed: Failed to save to Notebase
-  saveToNotebaseLoginRequired: Log in on readfrog.app to save to Notebase
-  saveToNotebaseBetaRequired: This account is not enrolled in the Notebase beta yet
-  saveToNotebaseTableUnavailable: The selected Notebase is no longer available
-  saveToNotebaseConnectionInvalid: This Notebase connection is out of date. Refresh it in Custom AI Actions and fix the mappings.
-  saveToNotebaseNoMappings: Add at least one valid mapping before saving
   contextDetailsTitleLabel: Title
   contextDetailsParagraphsLabel: Paragraphs
   translation: Translation

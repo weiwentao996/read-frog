@@ -8,6 +8,7 @@ import { useHydrateAtoms } from "jotai/utils"
 import { lazy, Suspense } from "react"
 import ReactDOM from "react-dom/client"
 import { createShadowRootUi, defineContentScript } from "#imports"
+import { RuntimeI18nProvider } from "@/components/providers/runtime-i18n-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { TooltipProvider } from "@/components/ui/base-ui/tooltip"
 import { configAtom } from "@/utils/atoms/config"
@@ -15,6 +16,7 @@ import { baseThemeModeAtom } from "@/utils/atoms/theme"
 import { getLocalConfig } from "@/utils/config/storage"
 import { APP_NAME } from "@/utils/constants/app"
 import { DEFAULT_CONFIG } from "@/utils/constants/config"
+import { initializeRuntimeI18n } from "@/utils/i18n/runtime"
 import { protectSelectAllShadowRoot } from "@/utils/select-all"
 import { insertShadowRootUIWrapperInto } from "@/utils/shadow-root"
 import { isSiteEnabled } from "@/utils/site-control"
@@ -58,6 +60,7 @@ export default defineContentScript({
       return
     }
 
+    await initializeRuntimeI18n(config.uiLanguage)
     const themeMode = await getLocalThemeMode()
 
     const ui = await createShadowRootUi(ctx, {
@@ -96,11 +99,13 @@ export default defineContentScript({
                   [baseThemeModeAtom, themeMode],
                 ]}
               >
-                <ThemeProvider container={wrapper}>
-                  <TooltipProvider>
-                    <App />
-                  </TooltipProvider>
-                </ThemeProvider>
+                <RuntimeI18nProvider>
+                  <ThemeProvider container={wrapper}>
+                    <TooltipProvider>
+                      <App />
+                    </TooltipProvider>
+                  </ThemeProvider>
+                </RuntimeI18nProvider>
               </HydrateAtoms>
             </JotaiProvider>
             {ReactQueryDevtools && (

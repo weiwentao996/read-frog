@@ -6,12 +6,14 @@ import { useHydrateAtoms } from "jotai/utils"
 import * as React from "react"
 import FrogToast from "@/components/frog-toast"
 import { HelpButton } from "@/components/help-button"
+import { RuntimeI18nProvider } from "@/components/providers/runtime-i18n-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { TooltipProvider } from "@/components/ui/base-ui/tooltip"
 import { configAtom } from "@/utils/atoms/config"
 import { baseThemeModeAtom } from "@/utils/atoms/theme"
 import { getLocalConfig } from "@/utils/config/storage"
 import { DEFAULT_CONFIG } from "@/utils/constants/config"
+import { initializeRuntimeI18n } from "@/utils/i18n/runtime"
 import { renderPersistentReactRoot } from "@/utils/react-root"
 import { queryClient } from "@/utils/tanstack-query"
 import { applyTheme, getLocalThemeMode, isDarkMode } from "@/utils/theme"
@@ -41,6 +43,7 @@ async function initApp() {
   ])
   const config = configValue ?? DEFAULT_CONFIG
 
+  await initializeRuntimeI18n(config.uiLanguage)
   applyTheme(document.documentElement, isDarkMode(themeMode) ? "dark" : "light")
 
   renderPersistentReactRoot(root, (
@@ -48,13 +51,15 @@ async function initApp() {
       <QueryClientProvider client={queryClient}>
         <JotaiProvider>
           <HydrateAtoms initialValues={[[configAtom, config], [baseThemeModeAtom, themeMode]]}>
-            <ThemeProvider>
-              <TooltipProvider>
-                <App />
-                <FrogToast />
-                <HelpButton />
-              </TooltipProvider>
-            </ThemeProvider>
+            <RuntimeI18nProvider>
+              <ThemeProvider>
+                <TooltipProvider>
+                  <App />
+                  <FrogToast />
+                  <HelpButton />
+                </TooltipProvider>
+              </ThemeProvider>
+            </RuntimeI18nProvider>
           </HydrateAtoms>
         </JotaiProvider>
       </QueryClientProvider>

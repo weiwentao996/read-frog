@@ -1,7 +1,6 @@
 name: Read Frog
 extName: Read Frog - Переводи и учись
 extDescription: Read Frog — расширение браузера с открытым исходным кодом, которое поможет вам глубоко изучать языки на любом веб-сайте.
-uninstallSurveyUrl: https://tally.so/r/nPK6Ob
 dataTypes:
   string: Текст
   number: Число
@@ -30,21 +29,8 @@ popup:
   translateParagraph: для перевода абзаца
   hub:
     tooltip: Переводите текст несколькими моделями одновременно
-  discord:
-    tooltip: Присоединяйтесь к Discord, чтобы связаться с разработчиками и получить ранний доступ к новым функциям
-  blog:
-    notification: Что нового в Read Frog
   aiSmartContext: Умный контекст ИИ
   aiSmartContextDescription: Использует контекст веб-страницы для улучшения качества перевода. Требуется LLM-провайдер перевода.
-  more:
-    title: Ещё
-    translationHub: Центр переводов
-    joinDiscord: Присоединиться к Discord
-    joinWechat: Присоединиться к группе WeChat
-    starGithub: Поставить звезду на Github
-    rateUs: Оценить нас
-    ebook: Сторонняя читалка электронных книг
-    tutorial: Руководство
 errorRecovery:
   title: Что-то пошло не так
   description: Активирован режим восстановления. Вы можете экспортировать текущие настройки как резервную копию, затем сбросить настройки и попробовать снова.
@@ -195,6 +181,20 @@ options:
       system: Системная
       light: Светлая
       dark: Тёмная
+    pluginLanguage:
+      title: Язык расширения
+      description: Выберите язык интерфейса расширения.
+      languages:
+        auto: Авто
+        en: English
+        es: Español
+        ja: 日本語
+        ko: 한국어
+        ru: Русский
+        tr: Türkçe
+        vi: Tiếng Việt
+        zhCN: 简体中文
+        zhTW: 繁體中文
     featureProviders:
       title: Провайдеры функций
       description: Выберите провайдера для каждой функции
@@ -389,42 +389,6 @@ options:
             description: Это поле вывода будет удалено.
             confirm: Удалить
             cancel: Отмена
-          notebase:
-            title: Подключение Notebase
-            description: Сохранить структурированные результаты этого действия в удалённую Notebase.
-            loginRequiredTitle: Войдите, чтобы настроить Notebase
-            loginRequiredDescription: Войдите на readfrog.app, прежде чем выбирать notebase или редактировать сопоставления.
-            loginAction: Войти
-            tableLabel: Notebase
-            tablePlaceholder: Выберите notebase
-            tableClearOption: Не подключать notebase
-            refreshAction: Обновить
-            emptyTitle: Notebase пока нет
-            emptyDescription: Создайте notebase на readfrog.app, затем вернитесь сюда и сопоставьте поля.
-            openNotebaseAction: Открыть Notebase
-            betaLockedTitle: Этот аккаунт ещё не участвует в beta Notebase
-            betaLockedDescription: Вы можете сохранить текущую настройку action, но выбор Notebase и синхронизация результатов пока доступны только выбранным beta-аккаунтам.
-            tableUnavailableTitle: Выбранная notebase больше недоступна
-            tableUnavailableDescription: Обновите список или выберите другую notebase перед следующим сохранением.
-            tableUnavailableOption: недоступно
-            schemaErrorTitle: Не удалось загрузить схему notebase
-            schemaErrorDescription: Попробуйте обновить схему ещё раз чуть позже.
-            schemaLoading: Загрузка схемы notebase...
-            mappingsLabel: Сопоставления полей
-            mappingsEmpty: Сопоставлений пока нет. Добавьте хотя бы одно, когда будете готовы сохранять поля.
-            addMappingAction: Добавить сопоставление
-            removeMappingAction: Удалить сопоставление
-            localFieldLabel: Поле действия
-            localFieldPlaceholder: Выберите поле действия
-            remoteFieldLabel: Поле Notebase
-            remoteFieldPlaceholder: Выберите поле notebase
-            columnUnavailableOption: удалено
-            invalidMappingsTitle: Некоторые сопоставления требуют внимания
-            invalidMappingsDescription: Некорректные сопоставления сохраняются, но кнопка Save to Notebase остаётся отключённой, пока вы их не исправите.
-            mappingMissingLocal: Сопоставленное поле действия больше не существует.
-            mappingMissingRemote: Сопоставленное поле notebase больше не существует.
-            mappingMissingSchema: Обновите схему notebase, чтобы проверить это сопоставление.
-            mappingIncompatible: Типы полей больше не совпадают.
           tokens:
             selection: Содержимое выделенного текста
             paragraphs: Текст абзацев, пересекающихся с выделением, объединённый пустыми строками; при отправке в пользовательские AI-действия обрезается до первых 2000 символов
@@ -648,9 +612,6 @@ options:
       title: О приложении
       description: Read Frog появился в апреле 2025 года
       mission: Read Frog стремится расширить равный доступ к качественному образованию в эпоху ИИ, делая обучение, максимально похожее на занятия с настоящим преподавателем, доступным по цене в языках, медицине и других знанияемких областях.
-      analytics:
-        title: Помочь улучшить пользовательский опыт
-        tooltip: Когда параметр включен, Read Frog отправляет анонимные сигналы об использовании продукта, чтобы мы могли проверять надежность функций, улучшать производительность и UX-детали, а также понимать, что развивать дальше в первую очередь.
     sync:
       title: Ручная синхронизация конфигурации
       description: Ручной импорт и экспорт настроек конфигурации
@@ -826,10 +787,6 @@ options:
           targetLanguage: Целевой язык
           videoTitle: Название видео
           videoSummary: Краткое содержание видео (требуется умный контекст ИИ)
-  whatsNew:
-    title: Что нового
-  survey:
-    title: Улучшить субтитры 🎁
   rateUs:
     title: Оцените нас
 side:
@@ -877,15 +834,6 @@ action:
   copied: Скопировано
   regenerate: Сгенерировать заново
   viewContextDetails: Контекст
-  saveToNotebase: Сохранить в Notebase
-  saveToNotebaseSaving: Сохранение...
-  saveToNotebaseSuccess: Сохранено в Notebase
-  saveToNotebaseFailed: Не удалось сохранить в Notebase
-  saveToNotebaseLoginRequired: Войдите на readfrog.app, чтобы сохранить в Notebase
-  saveToNotebaseBetaRequired: Для этого аккаунта beta-доступ к Notebase пока не включён
-  saveToNotebaseTableUnavailable: Выбранная Notebase больше недоступна
-  saveToNotebaseConnectionInvalid: Это подключение Notebase устарело. Обновите его в Custom AI Actions и исправьте сопоставления.
-  saveToNotebaseNoMappings: Добавьте хотя бы одно корректное сопоставление перед сохранением
   contextDetailsTitleLabel: Заголовок
   contextDetailsParagraphsLabel: Абзацы
   translation: Перевод

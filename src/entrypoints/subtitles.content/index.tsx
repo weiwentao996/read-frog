@@ -1,6 +1,7 @@
 import "@/utils/zod-config"
 import { defineContentScript } from "#imports"
 import { getLocalConfig } from "@/utils/config/storage"
+import { initializeRuntimeI18n } from "@/utils/i18n/runtime"
 
 declare global {
   interface Window {
@@ -26,6 +27,8 @@ export default defineContentScript({
     ctx.onInvalidated(() => {
       window.__READ_FROG_SUBTITLES_INJECTED__ = false
     })
+
+    await initializeRuntimeI18n(config.uiLanguage)
 
     const { bootstrapSubtitlesRuntime } = await import("./runtime")
     await bootstrapSubtitlesRuntime()

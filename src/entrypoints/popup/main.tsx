@@ -7,6 +7,7 @@ import { useHydrateAtoms } from "jotai/utils"
 import * as React from "react"
 import { browser } from "#imports"
 import FrogToast from "@/components/frog-toast"
+import { RuntimeI18nProvider } from "@/components/providers/runtime-i18n-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { RecoveryBoundary } from "@/components/recovery/recovery-boundary"
 import { TooltipProvider } from "@/components/ui/base-ui/tooltip"
@@ -14,6 +15,7 @@ import { configAtom } from "@/utils/atoms/config"
 import { baseThemeModeAtom } from "@/utils/atoms/theme"
 import { getLocalConfig } from "@/utils/config/storage"
 import { DEFAULT_CONFIG } from "@/utils/constants/config"
+import { initializeRuntimeI18n } from "@/utils/i18n/runtime"
 import { sendMessage } from "@/utils/message"
 import { renderPersistentReactRoot } from "@/utils/react-root"
 import { queryClient } from "@/utils/tanstack-query"
@@ -58,6 +60,8 @@ async function initApp() {
   ])
   const config = configValue ?? DEFAULT_CONFIG
 
+  await initializeRuntimeI18n(config.uiLanguage)
+
   const tabId = activeTab[0].id
 
   let isPageTranslated: boolean = false
@@ -96,14 +100,16 @@ async function initApp() {
               [baseThemeModeAtom, themeMode],
             ]}
           >
-            <ThemeProvider>
-              <TooltipProvider>
-                <FrogToast />
-                <RecoveryBoundary>
-                  <App />
-                </RecoveryBoundary>
-              </TooltipProvider>
-            </ThemeProvider>
+            <RuntimeI18nProvider>
+              <ThemeProvider>
+                <TooltipProvider>
+                  <FrogToast />
+                  <RecoveryBoundary>
+                    <App />
+                  </RecoveryBoundary>
+                </TooltipProvider>
+              </ThemeProvider>
+            </RuntimeI18nProvider>
           </HydrateAtoms>
         </JotaiProvider>
       </QueryClientProvider>

@@ -3,6 +3,7 @@ import type { PlatformConfig } from "@/entrypoints/subtitles.content/platforms"
 import ReactDOM from "react-dom/client"
 import { Toaster } from "sonner"
 import themeCSS from "@/assets/styles/theme.css?inline"
+import { RuntimeI18nProvider } from "@/components/providers/runtime-i18n-provider"
 import { REACT_SHADOW_HOST_CLASS } from "@/utils/constants/dom-labels"
 import { SUBTITLES_THEME } from "@/utils/constants/subtitles"
 import { waitForElement } from "@/utils/dom/wait-for-element"
@@ -87,8 +88,10 @@ export async function mountSubtitlesUI(
   const app = (
     <ShadowWrapperContext value={reactContainer}>
       <SubtitlesProviders adapter={adapter}>
-        <SubtitlesContainer />
-        <Toaster richColors className="z-2147483647 notranslate" />
+        <RuntimeI18nProvider>
+          <SubtitlesContainer />
+          <Toaster richColors className="z-2147483647 notranslate" />
+        </RuntimeI18nProvider>
       </SubtitlesProviders>
     </ShadowWrapperContext>
   )

@@ -1,5 +1,6 @@
 import "@/utils/zod-config"
 import type { ContentScriptContext } from "#imports"
+import type { Config } from "@/types/config/config"
 import type { ThemeMode } from "@/types/config/theme"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { kebabCase } from "case-anything"
@@ -7,11 +8,15 @@ import { Provider as JotaiProvider } from "jotai"
 import { useHydrateAtoms } from "jotai/utils"
 import ReactDOM from "react-dom/client"
 import { createShadowRootUi, defineContentScript } from "#imports"
+import { RuntimeI18nProvider } from "@/components/providers/runtime-i18n-provider"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { TooltipProvider } from "@/components/ui/base-ui/tooltip"
+import { configAtom } from "@/utils/atoms/config"
 import { baseThemeModeAtom } from "@/utils/atoms/theme"
 import { getLocalConfig } from "@/utils/config/storage"
 import { APP_NAME } from "@/utils/constants/app"
+import { DEFAULT_CONFIG } from "@/utils/constants/config"
+import { initializeRuntimeI18n } from "@/utils/i18n/runtime"
 import { ensureIconifyBackgroundFetch } from "@/utils/iconify/setup-background-fetch"
 import { protectSelectAllShadowRoot } from "@/utils/select-all"
 import { insertShadowRootUIWrapperInto } from "@/utils/shadow-root"
@@ -26,7 +31,10 @@ function HydrateAtoms({
   initialValues,
   children,
 }: {
-  initialValues: [[typeof baseThemeModeAtom, ThemeMode]]
+  initialValues: [
+    [typeof configAtom, Config],
+    [typeof baseThemeModeAtom, ThemeMode],
+  ]
   children: React.ReactNode
 }) {
   useHydrateAtoms(initialValues)
@@ -42,9 +50,10 @@ declare global {
   }
 }
 
-async function mountSelectionUI(ctx: ContentScriptContext) {
+async function mountSelectionUI(ctx: ContentScriptContext, config: Config) {
   ensureIconifyBackgroundFetch()
 
+  await initializeRuntimeI18n(config.uiLanguage)
   const themeMode = await getLocalThemeMode()
 
   const ui = await createShadowRootUi(ctx, {
@@ -61,12 +70,14 @@ async function mountSelectionUI(ctx: ContentScriptContext) {
       root.render(
         <QueryClientProvider client={queryClient}>
           <JotaiProvider>
-            <HydrateAtoms initialValues={[[baseThemeModeAtom, themeMode]]}>
-              <ThemeProvider container={wrapper}>
-                <TooltipProvider>
-                  <App uiContainer={container} />
-                </TooltipProvider>
-              </ThemeProvider>
+            <HydrateAtoms initialValues={[[configAtom, config], [baseThemeModeAtom, themeMode]]}>
+              <RuntimeI18nProvider>
+                <ThemeProvider container={wrapper}>
+                  <TooltipProvider>
+                    <App uiContainer={container} />
+                  </TooltipProvider>
+                </ThemeProvider>
+              </RuntimeI18nProvider>
             </HydrateAtoms>
           </JotaiProvider>
         </QueryClientProvider>,
@@ -97,7 +108,7 @@ export default defineContentScript({
     })
 
     // Check global site control
-    const config = await getLocalConfig()
+    const config = await getLocalConfig() ?? DEFAULT_CONFIG
     const siteControlUrl = getEffectiveSiteControlUrl(window.location.href)
     if (!isSiteEnabled(siteControlUrl, config)) {
       window.__READ_FROG_SELECTION_INJECTED__ = false
@@ -105,6 +116,6 @@ export default defineContentScript({
       return
     }
 
-    void mountSelectionUI(ctx)
+    void mountSelectionUI(ctx, config)
   },
 })

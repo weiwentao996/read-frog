@@ -1,5 +1,5 @@
 import type { LangCodeISO6393 } from "@read-frog/definitions"
-import type { FeatureUsageContext, FeatureUsedEventProperties } from "@/types/analytics"
+import type { FeatureUsageContext } from "@/types/analytics"
 import type {
   BackgroundGenerateTextPayload,
   BackgroundGenerateTextResponse,
@@ -46,12 +46,6 @@ interface ProtocolMap {
   askManagerToTogglePageTranslation: (data: { enabled: boolean, analyticsContext?: FeatureUsageContext }) => void
   openSelectionTranslationFromContextMenu: (data: { selectionText: string }) => void
   openSelectionCustomActionFromContextMenu: (data: { actionId: string, selectionText: string }) => void
-  // analytics
-  trackFeatureUsedEvent: (data: FeatureUsedEventProperties) => void
-  // user guide
-  pinStateChanged: (data: { isPinned: boolean }) => void
-  getPinState: () => boolean
-  returnPinState: (data: { isPinned: boolean }) => void
   // request
   enqueueTranslateRequest: (data: { text: string, langConfig: Config["language"], providerConfig: ProviderConfig, scheduleAt: number, hash: string, webTitle?: string | null, webContent?: string | null, webSummary?: string | null }) => Promise<string>
   getOrGenerateWebPageSummary: (data: { webTitle: string, webContent: string, providerConfig: ProviderConfig }) => Promise<string | null>

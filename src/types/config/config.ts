@@ -14,6 +14,7 @@ import { selectionToolbarCustomActionsSchema } from "./selection-toolbar"
 import { videoSubtitlesSchema } from "./subtitles"
 import { translateConfigSchema } from "./translate"
 import { ttsConfigSchema } from "./tts"
+import { uiLanguageSchema } from "./ui-language"
 // Language schema
 const languageSchema = z.object({
   sourceCode: langCodeISO6393Schema.or(z.literal("auto")),
@@ -88,6 +89,7 @@ const siteControlSchema = z.object({
 
 // Complete config schema
 export const configSchema = z.object({
+  uiLanguage: uiLanguageSchema,
   language: languageSchema,
   providersConfig: providersConfigSchema,
   translate: translateConfigSchema,

@@ -1,7 +1,6 @@
 name: Read Frog
 extName: Read Frog - Dịch và học
 extDescription: Read Frog là tiện ích mở rộng trình duyệt mã nguồn mở được thiết kế để giúp bạn học ngôn ngữ sâu từ bất kỳ trang web nào.
-uninstallSurveyUrl: https://tally.so/r/nPK6Ob
 dataTypes:
   string: Văn bản
   number: Số
@@ -30,21 +29,8 @@ popup:
   translateParagraph: để dịch đoạn văn
   hub:
     tooltip: Dịch văn bản với nhiều mô hình đồng thời
-  discord:
-    tooltip: Tham gia Discord để kết nối với các nhà phát triển và truy cập sớm các tính năng mới
-  blog:
-    notification: Có gì mới trong Read Frog
   aiSmartContext: Ngữ cảnh thông minh AI
   aiSmartContextDescription: Sử dụng ngữ cảnh trang web để cải thiện chất lượng dịch. Yêu cầu nhà cung cấp dịch LLM.
-  more:
-    title: Thêm
-    translationHub: Trung tâm Dịch thuật
-    joinDiscord: Tham gia Discord
-    joinWechat: Tham gia nhóm WeChat
-    starGithub: Đánh dấu sao trên Github
-    rateUs: Đánh giá chúng tôi
-    ebook: Trình đọc sách điện tử bên thứ ba
-    tutorial: Hướng dẫn
 errorRecovery:
   title: Đã xảy ra sự cố
   description: Chế độ khôi phục đang hoạt động. Bạn có thể xuất cài đặt hiện tại để sao lưu, sau đó đặt lại cài đặt và thử lại.
@@ -195,6 +181,20 @@ options:
       system: Hệ thống
       light: Sáng
       dark: Tối
+    pluginLanguage:
+      title: Ngôn ngữ tiện ích
+      description: Chọn ngôn ngữ hiển thị dùng cho giao diện tiện ích.
+      languages:
+        auto: Tự động
+        en: English
+        es: Español
+        ja: 日本語
+        ko: 한국어
+        ru: Русский
+        tr: Türkçe
+        vi: Tiếng Việt
+        zhCN: 简体中文
+        zhTW: 繁體中文
     featureProviders:
       title: Nhà cung cấp tính năng
       description: Chọn nhà cung cấp sử dụng cho mỗi tính năng
@@ -389,42 +389,6 @@ options:
             description: Trường đầu ra này sẽ bị xóa.
             confirm: Xóa
             cancel: Hủy
-          notebase:
-            title: Kết nối Notebase
-            description: Lưu kết quả có cấu trúc của hành động này vào Notebase từ xa.
-            loginRequiredTitle: Đăng nhập để cấu hình Notebase
-            loginRequiredDescription: Hãy đăng nhập trên readfrog.app trước khi chọn notebase hoặc chỉnh sửa ánh xạ.
-            loginAction: Đăng nhập
-            tableLabel: Notebase
-            tablePlaceholder: Chọn một notebase
-            tableClearOption: Không kết nối notebase
-            refreshAction: Làm mới
-            emptyTitle: Chưa có Notebase nào
-            emptyDescription: Hãy tạo một notebase trên readfrog.app rồi quay lại đây để ánh xạ các trường.
-            openNotebaseAction: Mở Notebase
-            betaLockedTitle: Tài khoản này chưa nằm trong beta Notebase
-            betaLockedDescription: Bạn vẫn có thể giữ cấu hình action hiện tại, nhưng việc chọn Notebase và đồng bộ kết quả hiện chỉ mở cho một số tài khoản beta.
-            tableUnavailableTitle: Notebase đã chọn không còn khả dụng
-            tableUnavailableDescription: Hãy làm mới hoặc chọn một notebase khác trước khi lưu lại.
-            tableUnavailableOption: không khả dụng
-            schemaErrorTitle: Không tải được schema notebase
-            schemaErrorDescription: Hãy thử làm mới lại sau ít phút nữa.
-            schemaLoading: Đang tải schema notebase...
-            mappingsLabel: Ánh xạ trường
-            mappingsEmpty: Chưa có ánh xạ nào. Hãy thêm một ánh xạ khi bạn sẵn sàng lưu các trường.
-            addMappingAction: Thêm ánh xạ
-            removeMappingAction: Xóa ánh xạ
-            localFieldLabel: Trường của hành động
-            localFieldPlaceholder: Chọn một trường của hành động
-            remoteFieldLabel: Trường Notebase
-            remoteFieldPlaceholder: Chọn một trường notebase
-            columnUnavailableOption: đã xóa
-            invalidMappingsTitle: Một số ánh xạ cần được xử lý
-            invalidMappingsDescription: Các ánh xạ không hợp lệ vẫn được giữ lại, nhưng Save to Notebase sẽ bị vô hiệu hóa cho đến khi bạn sửa chúng.
-            mappingMissingLocal: Trường của hành động đã ánh xạ không còn tồn tại.
-            mappingMissingRemote: Trường notebase đã ánh xạ không còn tồn tại.
-            mappingMissingSchema: Hãy làm mới schema notebase để xác thực ánh xạ này.
-            mappingIncompatible: Kiểu trường không còn khớp nữa.
           tokens:
             selection: Nội dung văn bản đã chọn
             paragraphs: Nội dung các đoạn giao với vùng chọn, được nối bằng dòng trống, sẽ bị cắt còn 2000 ký tự đầu khi gửi vào hành động AI tùy chỉnh
@@ -648,9 +612,6 @@ options:
       title: Giới thiệu
       description: Read Frog ra đời vào tháng 4 năm 2025
       mission: Read Frog hướng tới việc mở rộng cơ hội tiếp cận bình đẳng với giáo dục chất lượng cao trong thời đại AI bằng cách mang lại trải nghiệm học tập gần với cảm giác được giáo viên thật hướng dẫn, nhưng với chi phí hợp lý hơn trong học ngôn ngữ, y học và các lĩnh vực giàu tri thức khác.
-      analytics:
-        title: Giúp cải thiện trải nghiệm người dùng
-        tooltip: Khi bật, Read Frog sẽ gửi các tín hiệu sử dụng ẩn danh để xác minh tính ổn định của tính năng, tối ưu hiệu năng và độ tinh chỉnh UX, đồng thời giúp chúng tôi ưu tiên những gì cần xây tiếp theo.
     sync:
       title: Đồng bộ cấu hình thủ công
       description: Nhập và xuất cài đặt cấu hình thủ công
@@ -826,10 +787,6 @@ options:
           targetLanguage: Ngôn ngữ đích
           videoTitle: Tiêu đề video
           videoSummary: Tóm tắt video (yêu cầu Ngữ cảnh thông minh AI)
-  whatsNew:
-    title: Có gì mới
-  survey:
-    title: Cải thiện phụ đề 🎁
   rateUs:
     title: Đánh giá chúng tôi
 side:
@@ -877,15 +834,6 @@ action:
   copied: Đã sao chép
   regenerate: Tạo lại
   viewContextDetails: Ngữ cảnh
-  saveToNotebase: Lưu vào Notebase
-  saveToNotebaseSaving: Đang lưu...
-  saveToNotebaseSuccess: Đã lưu vào Notebase
-  saveToNotebaseFailed: Không thể lưu vào Notebase
-  saveToNotebaseLoginRequired: Hãy đăng nhập trên readfrog.app để lưu vào Notebase
-  saveToNotebaseBetaRequired: Tài khoản này chưa được mở quyền beta Notebase
-  saveToNotebaseTableUnavailable: Notebase đã chọn không còn khả dụng
-  saveToNotebaseConnectionInvalid: Kết nối Notebase này đã lỗi thời. Hãy làm mới trong Custom AI Actions và sửa các ánh xạ.
-  saveToNotebaseNoMappings: Hãy thêm ít nhất một ánh xạ hợp lệ trước khi lưu
   contextDetailsTitleLabel: Tiêu đề
   contextDetailsParagraphsLabel: Các đoạn văn
   translation: Dịch

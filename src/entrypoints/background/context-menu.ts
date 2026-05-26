@@ -5,6 +5,7 @@ import { ANALYTICS_FEATURE, ANALYTICS_SURFACE } from "@/types/analytics"
 import { createFeatureUsageContext } from "@/utils/analytics"
 import { CONFIG_STORAGE_KEY } from "@/utils/constants/config"
 import { getTranslationStateKey, TRANSLATION_STATE_KEY_PREFIX } from "@/utils/constants/storage-keys"
+import { initializeRuntimeI18n, setRuntimeI18nLanguage } from "@/utils/i18n/runtime"
 import { sendMessage } from "@/utils/message"
 import { ensureInitializedConfig } from "./config"
 import { getPageTranslationEnabled, setPageTranslationEnabled } from "./page-translation-state"
@@ -81,6 +82,7 @@ export async function initializeContextMenu() {
     return
   }
 
+  await initializeRuntimeI18n(config.uiLanguage)
   await updateContextMenuItems(config)
 }
 
@@ -88,6 +90,8 @@ export async function initializeContextMenu() {
  * Update context menu items based on config
  */
 async function updateContextMenuItems(config: Config) {
+  await setRuntimeI18nLanguage(config.uiLanguage)
+
   // Remove all existing menu items first
   await browser.contextMenus.removeAll()
 
@@ -136,6 +140,8 @@ async function updateTranslateMenuTitle(tabId: number, enabled?: boolean) {
   if (!config?.contextMenu.enabled) {
     return
   }
+
+  await setRuntimeI18nLanguage(config.uiLanguage)
 
   try {
     let isTranslated: boolean

@@ -1,6 +1,8 @@
 import "@/utils/zod-config"
 import { defineContentScript } from "#imports"
 import { getLocalConfig } from "@/utils/config/storage"
+import { DEFAULT_CONFIG } from "@/utils/constants/config"
+import { initializeRuntimeI18n } from "@/utils/i18n/runtime"
 import { clearEffectiveSiteControlUrl, getEffectiveSiteControlUrl, isSiteEnabled } from "@/utils/site-control"
 
 declare global {
@@ -18,7 +20,7 @@ export default defineContentScript({
       return
     window.__READ_FROG_HOST_INJECTED__ = true
 
-    const initialConfig = await getLocalConfig()
+    const initialConfig = await getLocalConfig() ?? DEFAULT_CONFIG
     const siteControlUrl = getEffectiveSiteControlUrl(window.location.href)
 
     if (!isSiteEnabled(siteControlUrl, initialConfig)) {
@@ -26,6 +28,8 @@ export default defineContentScript({
       clearEffectiveSiteControlUrl()
       return
     }
+
+    await initializeRuntimeI18n(initialConfig.uiLanguage)
 
     const { bootstrapHostContent } = await import("./runtime")
     await bootstrapHostContent(ctx, initialConfig)

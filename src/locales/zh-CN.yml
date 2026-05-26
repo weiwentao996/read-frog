@@ -1,7 +1,6 @@
 name: 陪读蛙
 extName: 陪读蛙 - 翻译与学习
 extDescription: 陪读蛙是一款开放源代码的浏览器插件，旨在帮助您从任何网站深入学习语言。
-uninstallSurveyUrl: https://tally.so/r/3E9XDL
 dataTypes:
   string: 文本
   number: 数字
@@ -30,21 +29,8 @@ popup:
   translateParagraph: 来翻译段落
   hub:
     tooltip: 一次性调用多个翻译模型翻译文本
-  discord:
-    tooltip: 加入 Discord 与开发者交流，抢先体验新功能
-  blog:
-    notification: 陪读蛙更新动态
   aiSmartContext: AI 智能上下文
   aiSmartContextDescription: 结合网页上下文提升翻译效果。需要配置 LLM 翻译服务商。
-  more:
-    title: 更多
-    translationHub: 翻译中心
-    joinDiscord: 加入 Discord
-    joinWechat: 加入微信群
-    starGithub: Github 加星
-    rateUs: 好评支持
-    ebook: 第三方电子书阅读器
-    tutorial: 使用教程
 errorRecovery:
   title: 应用发生异常
   description: 已进入恢复模式。你可以先导出当前设置作为备份，再重置设置后重试。
@@ -196,6 +182,20 @@ options:
       system: 跟随系统
       light: 浅色
       dark: 深色
+    pluginLanguage:
+      title: 插件语言
+      description: 选择扩展界面使用的显示语言。
+      languages:
+        auto: 自动
+        en: English
+        es: Español
+        ja: 日本語
+        ko: 한국어
+        ru: Русский
+        tr: Türkçe
+        vi: Tiếng Việt
+        zhCN: 简体中文
+        zhTW: 繁體中文
     featureProviders:
       title: 功能提供商
       description: 为每个功能选择使用的提供商
@@ -390,42 +390,6 @@ options:
             description: 此输出字段将被移除。
             confirm: 删除
             cancel: 取消
-          notebase:
-            title: 笔记库连接
-            description: 将这个指令的结构化结果保存到远程笔记库。
-            loginRequiredTitle: 登录后才能配置笔记库
-            loginRequiredDescription: 先在 readfrog.app 登录，然后再选择笔记库和编辑映射。
-            loginAction: 去登录
-            tableLabel: 笔记库
-            tablePlaceholder: 选择一个笔记库
-            tableClearOption: 不连接笔记库
-            refreshAction: 刷新
-            emptyTitle: 还没有笔记库
-            emptyDescription: 先去 readfrog.app 创建一个笔记库，再回来映射字段。
-            openNotebaseAction: 打开笔记库
-            betaLockedTitle: 当前账号尚未加入 Notebase Beta
-            betaLockedDescription: 你可以继续保留当前 action 配置，但选择笔记库和同步结果目前仅对部分 Beta 账号开放。
-            tableUnavailableTitle: 选中的笔记库已不可用
-            tableUnavailableDescription: 请刷新，或重新选择一个笔记库后再保存。
-            tableUnavailableOption: 不可用
-            schemaErrorTitle: 加载笔记库 schema 失败
-            schemaErrorDescription: 请稍后再试一次刷新。
-            schemaLoading: 正在加载笔记库 schema...
-            mappingsLabel: 字段映射
-            mappingsEmpty: 还没有映射，准备好后可以添加。
-            addMappingAction: 添加映射
-            removeMappingAction: 删除映射
-            localFieldLabel: 指令字段
-            localFieldPlaceholder: 选择一个指令字段
-            remoteFieldLabel: 笔记库字段
-            remoteFieldPlaceholder: 选择一个笔记库字段
-            columnUnavailableOption: 已删除
-            invalidMappingsTitle: 有些映射需要处理
-            invalidMappingsDescription: 无效映射会被保留，但在修复前会禁用“保存到笔记库”。
-            mappingMissingLocal: 映射的指令字段已经不存在。
-            mappingMissingRemote: 映射的笔记库字段已经不存在。
-            mappingMissingSchema: 刷新笔记库 schema 后才能校验这个映射。
-            mappingIncompatible: 字段类型已经不匹配。
           tokens:
             selection: 选中的文本内容
             paragraphs: 与选区相交的段落内容，会以空行拼接，传给自定义 AI 指令时会截断到前 2000 个字符
@@ -460,6 +424,11 @@ options:
               7. 难度必须是 CEFR 等级（A1, A2, B1, B2, C1, 或 C2）。
               8. 如果某个字段未知，返回空字符串而非猜测。
               9. 除非需要保留原文形式，所有文本字段均使用 {{targetLanguage}} 作答。
+              10. 如果 Selection 含有拼写错误，在语境支持时识别其可能的正确形式，并将“词条”写为纠正后的形式；在“释义”中说明该纠正。
+              11. 如果 Selection 是不规范缩写、谐音或逐字母拆开的表达，在语境支持时补全其标准写法（如 “A U ok” 表示 “are you ok”），并在“释义”中说明。
+              12. 如果该词/表达有文化特色、当地俚语、习语或地域含义，请在“释义”中一并解释。
+
+              13. 面向英语初学者时，优先解释词性用法、常见词形变化（如复数、第三人称单数、现在分词、过去式、过去分词）以及常用搭配/短语。
 
               ## 示例
 
@@ -470,9 +439,11 @@ options:
               - 词条：blossom
               - 音标：/ˈblɒs.əm/
               - 词性：noun
+              - 词形/时态：复数 blossoms；动词 blossom 的第三人称单数 blossoms、现在分词 blossoming、过去式/过去分词 blossomed。
               - 段落内容：The ephemeral beauty of cherry blossoms reminds us to cherish each moment.
               - 释义：花；花朵（尤指果树的花）
               - 段落翻译：樱花短暂的美丽提醒我们珍惜每一刻。
+              - 常用短语：cherry blossom（樱花）；in blossom（开花中）；come into blossom（开始开花）。
               - 难度：B2
 
               ### 示例 2
@@ -482,9 +453,11 @@ options:
               - 词条：感動
               - 音标：kandou
               - 词性：noun
+              - 词形/时态：名词/サ变动词词干；动词形式为 感動する。
               - 段落内容：この映画はつまらないと思ったけど、最後は感動した。
               - 释义：Being deeply moved; emotional touch
               - 段落翻译：I thought this movie was boring, but the ending was moving.
+              - 常用短语：感動する（被感动）；感動的な場面（感人的场景）。
               - 难度：B1
             prompt: |-
               ## 输入
@@ -497,14 +470,70 @@ options:
             fieldPhoneticDescription: 该语言的标准音标（如英语用 IPA，中文用拼音，日语用罗马字）。
             fieldPartOfSpeech: 词性
             fieldPartOfSpeechDescription: 语法类别（如 noun、verb、adjective）。
+            fieldForms: 词形/时态
+            fieldFormsDescription: 常见词形变化，尤其是英语的复数、第三人称单数、现在分词、过去式、过去分词；不适用时返回空字符串。
             fieldParagraphs: 段落内容
             fieldParagraphsDescription: 使用上方提示词中的原始段落内容，不要改写。
             fieldDefinition: 释义
             fieldDefinitionDescription: 针对语境含义的一条简洁释义。
             fieldParagraphsTranslation: 段落翻译
             fieldParagraphsTranslationDescription: 段落内容的翻译。
+            fieldCommonPhrases: 常用短语
+            fieldCommonPhrasesDescription: 2 到 5 个常用搭配、短语、习语或当地常见说法，附简短解释。
             fieldDifficulty: 难度
             fieldDifficultyDescription: 预估 CEFR 难度等级：A1、A2、B1、B2、C1 或 C2。
+          englishLearningCoach:
+            name: 英语学习教练
+            description: 面向英语小白，系统讲解语法、词性、词形、搭配、词根词缀和趣味记忆点
+            systemPrompt: |-
+              你是一个耐心、有趣、擅长启发初学者的英语学习教练。
+
+              ## 目标
+              根据用户选中的英文单词、短语或句子，生成一份适合英语初学者的学习卡片，帮助用户快速理解、会读、会用、能记住。
+
+              ## 规则
+              1. 默认使用 {{targetLanguage}} 解释，但保留关键英文原文。
+              2. 先判断 Selection 是单词、短语、缩写、俚语还是完整句子。
+              3. 如果有拼写错误或不规范表达，在语境支持时给出自然的正确写法。
+              4. 解释语法时要像教零基础学生一样，避免堆术语；必要术语要顺手解释。
+              5. 对动词必须给出原形、第三人称单数、现在分词、过去式、过去分词，并说明常见时态用法。
+              6. 对名词说明单复数；对形容词/副词说明比较级、最高级；不适用时说明“不适用”。
+              7. 给出常用搭配、短语、固定表达和生活场景用法，优先选择高频表达。
+              8. 如果能拆出词根、前缀、后缀或构词逻辑，要解释它们如何帮助记忆。
+              9. 如果有文化背景、历史来源、当地俚语、幽默用法、梗或容易误解的含义，要讲出来。
+              10. 输出要短句、分点、好读；不要写成长篇论文。
+              11. 练习句要适合初学者朗读，并尽量贴近日常生活。
+              12. 如果信息不确定，明确说“可能”，不要编造。
+
+              ## 输出风格
+              - 像老师在旁边讲解，友好、鼓励、有记忆点。
+              - 多给“怎么来的”“为什么这样用”“中文容易误解在哪里”。
+              - 对初学者最重要的内容放在前面。
+            prompt: |-
+              ## 输入
+              选中文本：{{selection}}
+              上下文段落：{{paragraphs}}
+              目标语言：{{targetLanguage}}
+            fieldExpression: 原文/纠正
+            fieldExpressionDescription: 选中的英文内容；如果有拼写或缩写问题，给出自然正确写法。
+            fieldPronunciation: 发音朗读
+            fieldPronunciationDescription: IPA、自然拼读提示、重音、连读或弱读提醒。
+            fieldMeaning: 核心意思
+            fieldMeaningDescription: 最适合当前语境的中文解释，以及直译和自然译法的区别。
+            fieldGrammar: 语法拆解
+            fieldGrammarDescription: 句子结构、时态、语态、介词、冠词、从句等初学者需要理解的语法点。
+            fieldForms: 词性/词形/时态
+            fieldFormsDescription: 词性，以及动词五种形态、名词单复数、形容词/副词比较级最高级等。
+            fieldPhrases: 常用搭配
+            fieldPhrasesDescription: 高频短语、固定搭配、常见口语表达和简单例句。
+            fieldRoots: 词根词缀
+            fieldRootsDescription: 可用于记忆的词根、前缀、后缀、构词来源或同族词。
+            fieldCulture: 文化/俚语/趣事
+            fieldCultureDescription: 当地用法、俚语含义、历史来源、笑话、梗或有趣背景。
+            fieldMemory: 记忆方法
+            fieldMemoryDescription: 适合初学者的联想记忆、避坑提醒和容易混淆点。
+            fieldPractice: 跟读练习
+            fieldPracticeDescription: 2 到 4 个适合朗读的简单英文例句，附中文意思。
           improveWriting:
             name: 写作改进
             description: 分析写作错误并提供改进建议
@@ -763,9 +792,6 @@ options:
       title: 关于
       description: Read Frog 出生于 2025 年 4 月
       mission: Read Frog 致力于在 AI 时代扩大高质量教育机会的平等可及性，通过更低成本地提供尽可能接近真人教师的学习体验，覆盖语言学习、医学以及其他知识密集型领域。
-      analytics:
-        title: 帮助改进用户体验
-        tooltip: 开启后，Read Frog 会发送匿名的产品使用信号，用于验证功能是否稳定、优化性能与交互细节，并帮助我们决定接下来优先投入的方向。
     sync:
       title: 手动配置同步
       description: 手动导入和导出您的配置设置
@@ -941,10 +967,6 @@ options:
           targetLanguage: 目标语言
           videoTitle: 视频标题
           videoSummary: 视频摘要（需启用 AI 智能上下文）
-  whatsNew:
-    title: 最近更新
-  survey:
-    title: 改进字幕 🎁
   rateUs:
     title: 好评支持
 side:
@@ -992,15 +1014,6 @@ action:
   copied: 已复制
   regenerate: 重新生成
   viewContextDetails: 上下文
-  saveToNotebase: 保存到笔记库
-  saveToNotebaseSaving: 保存中...
-  saveToNotebaseSuccess: 已保存到笔记库
-  saveToNotebaseFailed: 保存到笔记库失败
-  saveToNotebaseLoginRequired: 请先在 readfrog.app 登录后再保存到笔记库
-  saveToNotebaseBetaRequired: 当前账号尚未加入 Notebase Beta
-  saveToNotebaseTableUnavailable: 选中的笔记库已不可用
-  saveToNotebaseConnectionInvalid: 当前笔记库连接已经过期，请到 Custom AI Actions 中刷新并修复映射
-  saveToNotebaseNoMappings: 至少添加一个有效映射后才能保存
   contextDetailsTitleLabel: 标题
   contextDetailsParagraphsLabel: 段落内容
   translation: 翻译

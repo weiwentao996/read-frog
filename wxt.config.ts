@@ -5,9 +5,6 @@ import { z } from "zod"
 import { createExtensionClientEnvSchema, isLocalPackagesEnabled, resolveExtensionEnv } from "./src/env/shared"
 
 const WXT_API_KEY_PATTERN = /^WXT_.*API_KEY/
-const ALLOWED_BUNDLED_API_KEYS = new Set([
-  "WXT_POSTHOG_API_KEY",
-])
 const useLocalPackages = isLocalPackagesEnabled(process.env)
 const shouldSkipEnvValidation = process.env.WXT_SKIP_ENV_VALIDATION === "true"
 
@@ -21,7 +18,6 @@ export default defineConfig({
   alias: useLocalPackages
     ? {
         "@read-frog/definitions": path.resolve(__dirname, "../read-frog-monorepo/packages/definitions/src"),
-        "@read-frog/api-contract": path.resolve(__dirname, "../read-frog-monorepo/packages/api-contract/src"),
       }
     : {},
   manifest: ({ mode, browser }) => ({
@@ -30,7 +26,7 @@ export default defineConfig({
     default_locale: "en",
     // Fixed extension ID for development
     ...(mode === "development" && (browser === "chrome" || browser === "edge") && {
-      key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw2KhiXO2vySZtPu5pNSbyKhYavh8Be7gXmCZt8aJf6tQ/L3JK0qzL+3JSc/o20td3Jw+B2Dcw+EI93NAZr24xKnTNXQiJpuIuHb8xLXD0Ra/HrTVi4TJIhPdESogoG4uL6CD/F3TxfZJ2trX4Bt9cdAw1RGGeU+xU0g+YFfEka4ZUCpFAmTEw9H3/DU+nCp8yGaJWyiVgCTcFe38GZKEPt0iMJkTw956wz/iiafLx0pNG/RaztG9cAPoQOD2+SMFaeQ+b/G4OG17TYhzb09AhNBl6zSJ3jTKHSwuedCFwCce8Q/EchJfQZv71mjAE97bzwvkDYPCLj31Z5FE8HntMwIDAQAB",
+      key: "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAq319gqP+u99TN8qxEClwSUGcBKNpWN0zCKys4a0POMIu2LcNnGK9LkxNzbCm5PuQ9VFnLmvR9PYI7V6hEFEv3lyW8Dy2XYQcjW73h01viamEoKru0t8RdddlffgQVbPSGiURmYUOp18TM2dj7w4aRADeTxYGaz9r2IS8h+uOaqGlp8YugIfXcT2+4IfGpIQfBV7k7x+W2zbf5B1eYbG6vRRomPle/dWpf7sW9DG9iAVdy/Wko3himrxLUNqBf8+x2r8Sg5ooKH1kg15PPf4YNkV3NMkEBkX8SLN2xZ6VPcn88pIGx+BXKZoHhiKpXLw+YkPmk89On4M2pFI1lyP4FQIDAQAB",
     }),
     permissions: [
       "storage",
@@ -50,7 +46,7 @@ export default defineConfig({
     // moz-extension:// URLs on regular pages. Firefox enforces this more strictly.
     web_accessible_resources: [
       {
-        resources: ["assets/*.png", "assets/*.svg", "assets/*.webp"],
+        resources: ["assets/*.png", "assets/*.svg", "assets/*.webp", "_locales/*/messages.json"],
         matches: ["*://*/*", "file:///*"],
       },
     ],
@@ -100,7 +96,6 @@ export default defineConfig({
 
                 const apiKeyVars = Object.keys(process.env)
                   .filter(key => WXT_API_KEY_PATTERN.test(key))
-                  .filter(key => !ALLOWED_BUNDLED_API_KEYS.has(key))
 
                 if (apiKeyVars.length > 0) {
                   throw new Error(
