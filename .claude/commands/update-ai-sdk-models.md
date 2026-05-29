@@ -16,7 +16,7 @@ Then read `scripts/output/ai-sdk-provider-models.json`. Parse the JSON. Note `me
 
 ## Step 2: Read current state
 
-Read `src/utils/constants/models.ts` and extract all keys from `LLM_PROVIDER_MODELS`.
+Read `packages/core/src/providers/models.ts` and extract all keys from `LLM_PROVIDER_MODELS`.
 
 ## Step 3: Match providers
 
@@ -52,11 +52,11 @@ For **new models**: prepend them to the array (newer models first).
 
 For **missing models**: present them to the user and ask whether to remove each one. Some models may be intentionally kept even if not on the AI SDK docs page.
 
-Edit `src/utils/constants/models.ts` to update `LLM_PROVIDER_MODELS` with the changes. Preserve the `as const` assertion and existing formatting style (single quotes, trailing commas).
+Edit `packages/core/src/providers/models.ts` to update `LLM_PROVIDER_MODELS` with the changes. Preserve the `as const` assertion and existing formatting style (single quotes, trailing commas).
 
 ## Step 5: Check `LLM_MODEL_OPTIONS`
 
-Read the `LLM_MODEL_OPTIONS` array from `src/utils/constants/models.ts`. For each newly added model (from Step 4), check if it matches any existing `pattern` regex in `LLM_MODEL_OPTIONS`.
+Read the `LLM_MODEL_OPTIONS` array from `packages/core/src/providers/models.ts`. For each newly added model (from Step 4), check if it matches any existing `pattern` regex in `LLM_MODEL_OPTIONS`.
 
 Report any new models that do NOT match any pattern:
 
@@ -70,7 +70,7 @@ Do NOT auto-edit `LLM_MODEL_OPTIONS`. Only flag for user awareness.
 
 ## Step 6: Check `DEFAULT_LLM_PROVIDER_MODELS`
 
-Read `src/utils/constants/providers.ts` and find `DEFAULT_LLM_PROVIDER_MODELS`.
+Read `packages/extension/src/utils/constants/providers.ts` and find `DEFAULT_LLM_PROVIDER_MODELS`.
 
 For each provider that had models updated in Step 4, check if its current default `model` value still exists in the updated `LLM_PROVIDER_MODELS` list.
 
@@ -86,11 +86,11 @@ If ANY models were removed in Step 4, you MUST create a config migration script 
 
 ### 7a. Bump config version
 
-Read `src/utils/constants/config.ts` and increment `CONFIG_SCHEMA_VERSION` by 1 (e.g., 55 → 56).
+Read `packages/extension/src/utils/constants/config.ts` and increment `CONFIG_SCHEMA_VERSION` by 1 (e.g., 55 → 56).
 
 ### 7b. Create migration script
 
-Create a new file at `src/utils/config/migration-scripts/vXXX-to-vYYY.ts` following the existing naming convention.
+Create a new file at `packages/extension/src/utils/config/migration-scripts/vXXX-to-vYYY.ts` following the existing naming convention.
 
 **Critical rule**: The migration script must use **hardcoded string literals** for both the removed model names and the replacement default model names. NEVER import or reference runtime variables like `DEFAULT_LLM_PROVIDER_MODELS` or `LLM_PROVIDER_MODELS` — those change with future updates, but a migration is a snapshot of a specific point-in-time transformation.
 
@@ -134,11 +134,11 @@ export const migrate: MigrationFunction = (oldConfig: any) => {
 
 ### 7c. Register the migration
 
-Read `src/utils/config/migration.ts` and add the new migration import and entry to the `migrationScripts` record.
+Read `packages/extension/src/utils/config/migration.ts` and add the new migration import and entry to the `migrationScripts` record.
 
 ### 7d. Add test data
 
-Follow the existing test pattern in `src/utils/config/__tests__/example/`. Create a new version file with test series covering:
+Follow the existing test pattern in `packages/extension/src/utils/config/__tests__/example/`. Create a new version file with test series covering:
 - A provider using a removed model → should be migrated to the default
 - A provider using a non-removed model → should be unchanged
 
